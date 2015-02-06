@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from __future__ import print_function
+
 from datetime import datetime
 
 import unittest
@@ -49,7 +51,7 @@ class RandomExtendedTest(unittest.TestCase):
         )
 
         for post in ranking.rank(self.feed.objects()):
-            print '{0} min ago / score: {1} comments: {2} views: {3}, gravity: {4}'.format(
+            print('{0} min ago / score: {1} comments: {2} views: {3}, gravity: {4}'.format(
                 (datetime.now() - post.created_at).seconds / 60, post.score,
                 post.comments, post.views, post.gravity
-            )
+            ))
