@@ -90,8 +90,6 @@ class HackerNewsExtendedRanking(HackerNewsBaseRanking):
             self.gravity = partial(self._calculate_gravity, gravity_conf=gravity_conf)
             self.feature_max_impacts = self._get_feature_max_impacts(gravity_conf)
 
-            print self.feature_max_impacts, gravity_conf
-
     def _get_feature_max_impacts(self, gravity_conf):
         feature_max_impact_map = dict((feature, 0) for feature in gravity_conf)
 
