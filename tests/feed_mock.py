@@ -2,6 +2,7 @@
 
 import random
 
+from datetime import datetime
 from dateutil.parser import parse
 
 
@@ -63,3 +64,26 @@ class RedditFeed(object):
                 return False
 
         return True
+
+
+class RandomExtendedFeed(object):
+    class PostClass():
+        pass
+
+    def __init__(self, limit=100):
+        self.limit = limit
+
+    def objects(self):
+        for _ in range(self.limit):
+            post = self.PostClass()
+
+            post.created_at = datetime(
+                year=2015, month=2, day=6,
+                hour=random.randint(0, 23), minute=random.randint(0, 59)
+            )
+
+            post.score = random.randint(0, 200)
+            post.comments = random.choice([0, 2, 5, 20, 40, 60, 100])
+            post.views = post.comments + random.choice([0, 20, 40, 60, 100, 200])
+
+            yield post
