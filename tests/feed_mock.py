@@ -2,7 +2,7 @@
 
 import random
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.parser import parse
 
 
@@ -77,7 +77,7 @@ class RandomExtendedFeed(object):
         for _ in range(self.limit):
             post = self.PostClass()
 
-            today = datetime.today()
+            today = datetime.today() - timedelta(days=1)
             post.created_at = today.replace(hour=random.randint(0, 23), minute=random.randint(0, 59))
 
             post.score = random.randint(0, 200)

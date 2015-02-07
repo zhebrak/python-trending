@@ -42,7 +42,7 @@ class RandomExtendedTest(unittest.TestCase):
             'views': [1, 200]
         }
 
-    def test_working_test(self):
+    def test_working(self):
         ranking = HackerNewsExtendedRanking(
             votes_attr='score', created_at_attr='created_at',
             gravity_conf=self.gravity_conf
