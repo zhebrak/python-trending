@@ -77,10 +77,8 @@ class RandomExtendedFeed(object):
         for _ in range(self.limit):
             post = self.PostClass()
 
-            post.created_at = datetime(
-                year=2015, month=2, day=6,
-                hour=random.randint(0, 23), minute=random.randint(0, 59)
-            )
+            today = datetime.today()
+            post.created_at = today.replace(hour=random.randint(0, 23), minute=random.randint(0, 59))
 
             post.score = random.randint(0, 200)
             post.comments = random.choice([0, 2, 5, 20, 40, 60, 100])

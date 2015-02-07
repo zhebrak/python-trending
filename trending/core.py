@@ -19,6 +19,9 @@ class Ranking(object):
         if isinstance(attr, str):
             return getattr(obj, attr)
 
+        if not callable(attr):
+            return attr
+
         return attr(obj)
 
 
@@ -72,16 +75,21 @@ class HackerNewsExtendedRanking(HackerNewsBaseRanking):
     """
     gravity_conf:
 
-    {'feature': [weight, score_limit]}
+    {'<feature>': [weight, score_limit]}
 
     """
 
-    MIN_GRAVITY = 1.5
-    MAX_GRAVITY = 2
-    GRAVITY_RANGE = MAX_GRAVITY - MIN_GRAVITY
-
-    def __init__(self, votes_attr, created_at_attr, gravity_conf=None):
+    def __init__(
+            self,
+            votes_attr, created_at_attr,
+            gravity_conf=None, min_gravity=1.5, max_gravity=2,
+            annotate_items=False
+    ):
         super(HackerNewsExtendedRanking, self).__init__(votes_attr, created_at_attr)
+
+        self.MIN_GRAVITY = min_gravity
+        self.MAX_GRAVITY = max_gravity
+        self.GRAVITY_RANGE = self.MAX_GRAVITY - self.MIN_GRAVITY
 
         if gravity_conf is None:
             self.gravity = lambda obj: self.DEFAULT_GRAVITY
@@ -89,6 +97,8 @@ class HackerNewsExtendedRanking(HackerNewsBaseRanking):
         else:
             self.gravity = partial(self._calculate_gravity, gravity_conf=gravity_conf)
             self.feature_max_impacts = self._get_feature_max_impacts(gravity_conf)
+
+        self.annotate_items = annotate_items
 
     def _get_feature_max_impacts(self, gravity_conf):
         feature_max_impact_map = dict((feature, 0) for feature in gravity_conf)
@@ -116,4 +126,12 @@ class HackerNewsExtendedRanking(HackerNewsBaseRanking):
 
     def calculate_score(self, obj):
         votes, hour_age = self._get_object_info(obj)
-        return (votes - 1) / pow((hour_age + 2), self.gravity(obj))
+        gravity = self.gravity(obj)
+
+        rank = (votes - 1) / pow((hour_age + 2), gravity)
+
+        if self.annotate_items:
+            obj.trending_rank = rank
+            obj.trending_gravity = gravity
+
+        return rank
