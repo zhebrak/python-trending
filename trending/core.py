@@ -60,7 +60,7 @@ class HackerNewsBaseRanking(Ranking):
 
         created_at = self.get_ranking_attr(obj, self.created_at_attr)
         delta = datetime.now() - created_at
-        hour_age = delta.days * 24 + delta.seconds / 3600
+        hour_age = delta.days * 24 + delta.seconds / 3600.0
 
         return votes, hour_age
 
