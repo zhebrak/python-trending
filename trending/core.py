@@ -127,8 +127,9 @@ class HackerNewsExtendedRanking(HackerNewsBaseRanking):
     def calculate_score(self, obj):
         votes, hour_age = self._get_object_info(obj)
         gravity = self.gravity(obj)
+        gravity_coeff = obj.gravity_coeff if hasattr(obj, 'gravity_coeff') else 1
 
-        rank = (votes - 1) / pow((hour_age + 2), gravity)
+        rank = (votes - 1) / pow((hour_age + 2), gravity * gravity_coeff)
 
         if self.annotate_items:
             obj.trending_rank = rank
